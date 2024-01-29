@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import ContactForm from './ContactForm';
@@ -14,6 +14,19 @@ const PhonebookApp = () => {
     number: '',
   });
 
+  useEffect(() => {
+    // Ładowanie kontaktów z localStorage przy starcie aplikacji
+    const storedContacts = JSON.parse(localStorage.getItem('contacts'));
+    if (storedContacts) {
+      setState(prevState => ({ ...prevState, contacts: storedContacts }));
+    }
+  }, []); // Pusta zależność oznacza, że useEffect zostanie uruchomiony tylko raz, po zamontowaniu komponentu
+
+  useEffect(() => {
+    // Zapisywanie kontaktów do localStorage po każdej zmianie w stanie
+    localStorage.setItem('contacts', JSON.stringify(state.contacts));
+  }, [state.contacts]); // useEffect zostanie uruchomiony tylko wtedy, gdy zmieni się tablica kontaktów
+
   const addContact = () => {
     const contactAlreadyExists = contactExists(state.name);
 
@@ -28,12 +41,12 @@ const PhonebookApp = () => {
       number: state.number,
     };
 
-    setState({
-      ...state,
-      contacts: [...state.contacts, newContact],
+    setState(prevState => ({
+      ...prevState,
+      contacts: [...prevState.contacts, newContact],
       name: '',
       number: '',
-    });
+    }));
   };
 
   const handleFilterChange = e => {
@@ -48,7 +61,7 @@ const PhonebookApp = () => {
 
   const handleDeleteContact = id => {
     const updatedContacts = state.contacts.filter(contact => contact.id !== id);
-    setState({ ...state, contacts: updatedContacts });
+    setState(prevState => ({ ...prevState, contacts: updatedContacts }));
   };
 
   const filteredContacts = state.contacts.filter(contact =>
