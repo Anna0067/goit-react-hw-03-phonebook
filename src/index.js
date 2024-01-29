@@ -1,10 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { App } from 'components/App';
-import './index.css';
+import ReactDOM from 'react-dom';
+import PhonebookApp from './components/App';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <PhonebookApp />
+  </React.StrictMode>,
+  document.getElementById('root')
 );
